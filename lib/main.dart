@@ -29,7 +29,11 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage>
+    with SingleTickerProviderStateMixin {
+  late AnimationController controller;
+  late Animation rotationTween;
+
   double calculateLineMargin(int lineNumber, double barWidth) {
     print('total is $barWidth');
     var emojiSize = (barWidth * 0.6) / 6;
@@ -40,6 +44,24 @@ class _MyHomePageState extends State<MyHomePage> {
     var numberOfEmoji = emojiSize * lineNumber;
     left = left + (emojiSize) + numberOfEmoji;
     return left;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    controller =
+        AnimationController(duration: const Duration(seconds: 2), vsync: this);
+    rotationTween = Tween<double>(begin: 0.0, end: 15.0)
+        .animate(CurvedAnimation(parent: controller, curve: Curves.easeInOut));
+    controller.addListener(() {
+      setState(() {});
+    });
+    controller.forward(from: 0.0);
+    controller.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        controller.repeat(reverse: true);
+      }
+    });
   }
 
   @override
@@ -94,10 +116,14 @@ class _MyHomePageState extends State<MyHomePage> {
                     width,
                   ),
                   top: height * 0.012,
-                  child: Container(
-                    width: width * 0.003,
-                    height: height * 0.6,
-                    decoration: BoxDecoration(color: Color(0xffAAAAAA)),
+                  child: Transform(
+                    transform:
+                        Matrix4.rotationZ((rotationTween.value) * pi / 180),
+                    child: Container(
+                      width: width * 0.003,
+                      height: height * 0.6,
+                      decoration: BoxDecoration(color: Color(0xffAAAAAA)),
+                    ),
                   ),
                 ),
                 //face
@@ -135,7 +161,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 depressedFace(width * 0.04, width, height, 2),
 
-                //4-Depressed Face
+                //4- Angry Face
                 //line
                 Positioned(
                   left: calculateLineMargin(
@@ -149,9 +175,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     decoration: BoxDecoration(color: Color(0xffAAAAAA)),
                   ),
                 ),
-                depressedFace(width * 0.04, width, height, 3),
+                angryFace(width * 0.04, width, height, 3),
 
-                //2-Not Amused Face
+                //5- Teary Face
                 //line
                 Positioned(
                   left: calculateLineMargin(
@@ -159,13 +185,17 @@ class _MyHomePageState extends State<MyHomePage> {
                     width,
                   ),
                   top: height * 0.012,
-                  child: Container(
-                    width: width * 0.003,
-                    height: height * 0.6,
-                    decoration: BoxDecoration(color: Color(0xffAAAAAA)),
+                  child: Transform(
+                    transform:
+                        Matrix4.rotationZ(-(rotationTween.value) * pi / 180),
+                    child: Container(
+                      width: width * 0.003,
+                      height: height * 0.6,
+                      decoration: BoxDecoration(color: Color(0xffAAAAAA)),
+                    ),
                   ),
                 ),
-                smilyFace(width * 0.04, width, height, 4),
+                tearyFace(width * 0.04, width, height, 4),
 
                 //2-Not Amused Face
                 //line
@@ -434,6 +464,159 @@ class DepressedFaceCustomPaint extends CustomPainter {
       Paint()
         ..color = Colors.black
         ..strokeCap = StrokeCap.round,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return false;
+  }
+}
+
+//4
+//Angry Face
+Widget angryFace(
+    double width, double barWidth, double barHeight, double numberOfEmoji) {
+  var size = (barWidth * 0.6) / 6;
+  return Positioned(
+    left: (barWidth * 0.2) + (size * numberOfEmoji) + size / 2,
+    top: barHeight * 0.6,
+    child: Container(
+      height: size,
+      width: size,
+      decoration: BoxDecoration(
+        color: Color(0xffeDBF37),
+        borderRadius: BorderRadius.circular(50),
+      ),
+      child: Stack(
+        children: [
+          CustomPaint(
+            painter: AngryFaceCustomPaint(size),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+class AngryFaceCustomPaint extends CustomPainter {
+  double mySize;
+  AngryFaceCustomPaint(this.mySize);
+  @override
+  void paint(Canvas canvas, Size size) {
+    //left Eye
+    //  //eye brow
+    canvas
+      ..save()
+      ..translate(mySize * 0.35, mySize * 0.2)
+      ..rotate(22 * pi / 180)
+      ..translate(-mySize * 0.35, -mySize * 0.2);
+    var rectLeftEyebrow =
+        Rect.fromLTRB(mySize * 0.2, mySize * 0.3, mySize * 0.5, mySize * 0.45);
+    canvas.drawArc(
+        rectLeftEyebrow, 0, pi, false, Paint()..color = Colors.black);
+    canvas.restore();
+    // //eye
+
+    canvas.drawCircle(Offset(mySize * 0.28, mySize * 0.46), mySize * 0.08,
+        Paint()..color = Colors.black);
+
+    //right eye
+    //  //eyebrow
+    canvas
+      ..save()
+      ..translate(mySize * 0.65, mySize * 0.2)
+      ..rotate(-22 * pi / 180)
+      ..translate(-mySize * 0.65, -mySize * 0.2);
+    var rectLeftEyebroww =
+        Rect.fromLTRB(mySize * 0.5, mySize * 0.3, mySize * 0.8, mySize * 0.45);
+    canvas.drawArc(
+        rectLeftEyebroww, 0, pi, false, Paint()..color = Colors.black);
+    canvas.restore();
+    // //eye
+    canvas.drawCircle(Offset(mySize * 0.72, mySize * 0.46), mySize * 0.08,
+        Paint()..color = Colors.black);
+
+    //mouth
+    //mouth
+    canvas.drawArc(
+      Rect.fromCenter(
+        center: Offset(mySize / 2, mySize / 2 + mySize * 0.28),
+        height: mySize * 0.2,
+        width: mySize * 0.4,
+      ),
+      0,
+      -pi,
+      false,
+      Paint()..color = Colors.black,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return false;
+  }
+}
+
+//5
+//Teary Face
+Widget tearyFace(
+    double width, double barWidth, double barHeight, double numberOfEmoji) {
+  var size = (barWidth * 0.6) / 6;
+  return Positioned(
+    left: (barWidth * 0.2) + (size * numberOfEmoji) + size / 2,
+    top: barHeight * 0.6,
+    child: Container(
+      height: size,
+      width: size,
+      decoration: BoxDecoration(
+        color: Color(0xffeDBF37),
+        borderRadius: BorderRadius.circular(50),
+      ),
+      child: Stack(
+        children: [
+          CustomPaint(
+            painter: TearyFaceCustomPaint(size),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+class TearyFaceCustomPaint extends CustomPainter {
+  double mySize;
+  TearyFaceCustomPaint(this.mySize);
+  @override
+  void paint(Canvas canvas, Size size) {
+    //left eye
+    var rectLeft1 =
+        Rect.fromLTRB(mySize * 0.1, mySize * 0.3, mySize * 0.4, mySize * 0.6);
+    canvas.drawArc(rectLeft1, pi / 2, pi * 2, false, Paint());
+    // var rectLeft2 =
+    //     Rect.fromLTRB(mySize * 0.1, mySize * 0.3, mySize * 0.4, mySize * 0.45);
+    // canvas.drawArc(rectLeft2, 0.0, -pi, false, Paint());
+
+    //right eye
+    var rectRight1 =
+        Rect.fromLTRB(mySize * 0.6, mySize * 0.3, mySize * 0.9, mySize * 0.6);
+    canvas.drawArc(rectRight1, pi / 2, pi * 2, false, Paint());
+    // var rectRight2 =
+    //     Rect.fromLTRB(mySize * 0.6, mySize * 0.3, mySize * 0.9, mySize * 0.45);
+    // canvas.drawArc(rectRight2, 0.0, -pi, false, Paint());
+
+    //mouth
+    //mouth
+    canvas.drawArc(
+      Rect.fromCenter(
+        center: Offset(mySize / 2, mySize / 2 + mySize * 0.28),
+        height: mySize * 0.2,
+        width: mySize * 0.4,
+      ),
+      0,
+      -pi,
+      false,
+      Paint()..color = Colors.black,
     );
   }
 
