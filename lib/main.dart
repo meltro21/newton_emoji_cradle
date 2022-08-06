@@ -38,46 +38,44 @@ class _MyHomePageState extends State<MyHomePage> {
     var left = barWidth * 0.2;
     print('left is $left');
     var numberOfEmoji = emojiSize * lineNumber;
-    left = left + (emojiSize / 2) + numberOfEmoji;
+    left = left + (emojiSize) + numberOfEmoji;
     return left;
   }
 
   @override
   Widget build(BuildContext context) {
-    var height = MediaQuery.of(context).size.height;
-    var width = MediaQuery.of(context).size.width;
-    var barHeight = height * 0.6;
-    var barWidth = width * 0.6;
+    var height = (MediaQuery.of(context).size.height) * 0.7;
+    var width = (MediaQuery.of(context).size.width) * 0.7;
+    var barHeight = height * 0.7;
+    var barWidth = width * 0.7;
     return Scaffold(
-      backgroundColor: Color(0xfffcf9f4),
+      backgroundColor: const Color(0xfffcf9f4),
       body: SafeArea(
         child: Center(
           child: Container(
-            height: height * 0.7,
-            width: width * 0.7,
-            color: Colors.red,
+            height: height,
+            width: width,
+            //color: Colors.red,
             child: Stack(
               children: [
                 // Bar
                 Container(
-                  margin:
-                      EdgeInsets.only(left: width * 0.04, right: width * 0.04),
-                  color: Colors.blue,
-                  height: height * 0.7,
-                  width: width * 0.7,
+                  height: height,
+                  width: width,
+                  //color: Colors.blue,
                   child: CustomPaint(
                     size: Size.zero,
-                    painter: Bar(barHeight, barWidth),
+                    painter: Bar(height, width),
                   ),
                 ),
 
                 //Base
                 Positioned(
-                  top: barHeight * 0.9,
+                  top: height * 0.9,
                   left: 0,
                   child: Container(
-                    height: barHeight * 0.1,
-                    width: (((width * 0.04) * 2) + barWidth * 1),
+                    height: height * 0.1,
+                    width: width * 1,
                     decoration: const BoxDecoration(
                       color: Color(0xff071013),
                       borderRadius: BorderRadius.only(
@@ -87,133 +85,103 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ),
                 ),
-                Positioned(
-                  left: 0,
-                  child: Container(
-                    color: Colors.green,
-                    height: 50,
-                    width: 99.24,
-                  ),
-                ),
+
                 //1-Smily Face
                 //line
                 Positioned(
                   left: calculateLineMargin(
                     0,
-                    barWidth,
+                    width,
                   ),
-                  top: barHeight * 0.012,
+                  top: height * 0.012,
                   child: Container(
-                    width: barWidth * 0.003,
-                    height: barHeight * 0.6,
+                    width: width * 0.003,
+                    height: height * 0.6,
                     decoration: BoxDecoration(color: Color(0xffAAAAAA)),
                   ),
                 ),
                 //face
-                smilyFace(width * 0.04, barWidth, barHeight, 0),
+                smilyFace(width * 0.04, width, height, 0),
 
                 //2-Not Amused Face
                 //line
                 Positioned(
                   left: calculateLineMargin(
                     1,
-                    barWidth,
+                    width,
                   ),
-                  top: barHeight * 0.012,
+                  top: height * 0.012,
                   child: Container(
-                    width: barWidth * 0.003,
-                    height: barHeight * 0.6,
+                    width: width * 0.003,
+                    height: height * 0.6,
                     decoration: BoxDecoration(color: Color(0xffAAAAAA)),
                   ),
                 ),
-                smilyFace(barHeight * 0.15, barWidth, barHeight, 1),
+                notAmusedFace(width * 0.04, width, height, 1),
 
-                //2-Not Amused Face
+                //3-Depressed Face
                 //line
                 Positioned(
                   left: calculateLineMargin(
                     2,
-                    barWidth,
+                    width,
                   ),
-                  top: barHeight * 0.012,
+                  top: height * 0.012,
                   child: Container(
-                    width: barWidth * 0.003,
-                    height: barHeight * 0.6,
+                    width: width * 0.003,
+                    height: height * 0.6,
                     decoration: BoxDecoration(color: Color(0xffAAAAAA)),
                   ),
                 ),
-                smilyFace(barHeight * 0.15, barWidth, barHeight, 2),
+                depressedFace(width * 0.04, width, height, 2),
 
-                //2-Not Amused Face
+                //4-Depressed Face
                 //line
                 Positioned(
                   left: calculateLineMargin(
                     3,
-                    barWidth,
+                    width,
                   ),
-                  top: barHeight * 0.012,
+                  top: height * 0.012,
                   child: Container(
-                    width: barWidth * 0.003,
-                    height: barHeight * 0.6,
+                    width: width * 0.003,
+                    height: height * 0.6,
                     decoration: BoxDecoration(color: Color(0xffAAAAAA)),
                   ),
                 ),
-                smilyFace(barHeight * 0.15, barWidth, barHeight, 3),
+                depressedFace(width * 0.04, width, height, 3),
 
                 //2-Not Amused Face
                 //line
                 Positioned(
                   left: calculateLineMargin(
                     4,
-                    barWidth,
+                    width,
                   ),
-                  top: barHeight * 0.012,
+                  top: height * 0.012,
                   child: Container(
-                    width: barWidth * 0.003,
-                    height: barHeight * 0.6,
+                    width: width * 0.003,
+                    height: height * 0.6,
                     decoration: BoxDecoration(color: Color(0xffAAAAAA)),
                   ),
                 ),
-                smilyFace(barHeight * 0.15, barWidth, barHeight, 4),
+                smilyFace(width * 0.04, width, height, 4),
 
                 //2-Not Amused Face
                 //line
-                Positioned(
-                  left: calculateLineMargin(
-                    5,
-                    barWidth,
-                  ),
-                  top: barHeight * 0.012,
-                  child: Container(
-                    width: barWidth * 0.003,
-                    height: barHeight * 0.6,
-                    decoration: BoxDecoration(color: Color(0xffAAAAAA)),
-                  ),
-                ),
-                smilyFace(barHeight * 0.15, barWidth, barHeight, 5),
-                Positioned(
-                  left: 396.96,
-                  child: Container(
-                    color: Colors.green,
-                    height: 50,
-                    width: 99.24,
-                  ),
-                )
                 // Positioned(
-                //   left: barWidth * 0.3 - (barHeight * 0.15 / 2),
-                //   top: barHeight * 0.6,
-                //   child: smilyFace(barHeight * 0.15, barWidth, barHeight),
+                //   left: calculateLineMargin(
+                //     5,
+                //     width,
+                //   ),
+                //   top: height * 0.012,
+                //   child: Container(
+                //     width: width * 0.003,
+                //     height: height * 0.6,
+                //     decoration: BoxDecoration(color: Color(0xffAAAAAA)),
+                //   ),
                 // ),
-                // Positioned(
-                //   left: barWidth * 0.3 - (barHeight * 0.15 / 2),
-                //   top: barHeight * 0.6,
-                //   child: smilyFace(barHeight * 0.15, barWidth, barHeight),
-                // ),
-                // Positioned(
-                //   left: barWidth * 0.3 - (barHeight * 0.15 / 2),
-                //   top: barHeight * 0.6,
-                //   child: smilyFace(barHeight * 0.15, barWidth, barHeight),
-                // ),
+                // smilyFace(width * 0.04, width, height, 5),
               ],
             ),
           ),
@@ -226,9 +194,8 @@ class _MyHomePageState extends State<MyHomePage> {
 Widget smilyFace(
     double width, double barWidth, double barHeight, double numberOfEmoji) {
   var size = (barWidth * 0.6) / 6;
-  // print('individualCircle should be $individualCircle');
   return Positioned(
-    left: (barWidth * 0.2) + (size * numberOfEmoji) + width,
+    left: (barWidth * 0.2) + (size * numberOfEmoji) + size / 2,
     top: barHeight * 0.6,
     child: Container(
       height: size,
@@ -323,6 +290,159 @@ class SmilyFaceSmile extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
 
+//2
+//not amused Face
+Widget notAmusedFace(
+    double width, double barWidth, double barHeight, double numberOfEmoji) {
+  var size = (barWidth * 0.6) / 6;
+  return Positioned(
+    left: (barWidth * 0.2) + (size * numberOfEmoji) + size / 2,
+    top: barHeight * 0.6,
+    child: Container(
+      height: size,
+      width: size,
+      decoration: BoxDecoration(
+        color: Color(0xffeDBF37),
+        borderRadius: BorderRadius.circular(50),
+      ),
+      child: Stack(
+        children: [
+          CustomPaint(
+            painter: NotAmused(size),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+class NotAmused extends CustomPainter {
+  double mySize;
+  NotAmused(this.mySize);
+  @override
+  void paint(Canvas canvas, Size size) {
+    //left eye
+    var rectLeft1 =
+        Rect.fromLTRB(mySize * 0.1, mySize * 0.3, mySize * 0.4, mySize * 0.45);
+    canvas.drawArc(rectLeft1, pi / 2, pi, false, Paint());
+    var rectLeft2 =
+        Rect.fromLTRB(mySize * 0.1, mySize * 0.3, mySize * 0.4, mySize * 0.45);
+    canvas.drawArc(rectLeft2, 0.0, -pi, false, Paint());
+
+    //right eye
+    var rectRight1 =
+        Rect.fromLTRB(mySize * 0.6, mySize * 0.3, mySize * 0.9, mySize * 0.45);
+    canvas.drawArc(rectRight1, pi / 2, pi, false, Paint());
+    var rectRight2 =
+        Rect.fromLTRB(mySize * 0.6, mySize * 0.3, mySize * 0.9, mySize * 0.45);
+    canvas.drawArc(rectRight2, 0.0, -pi, false, Paint());
+
+    //mouth
+    canvas.drawArc(
+      Rect.fromCenter(
+        center: Offset(mySize / 2, mySize / 2 + mySize * 0.28),
+        height: mySize * 0.2,
+        width: mySize * 0.4,
+      ),
+      0,
+      -pi,
+      false,
+      Paint()..color = Colors.black,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return false;
+  }
+}
+
+//3
+//depressed Face
+Widget depressedFace(
+    double width, double barWidth, double barHeight, double numberOfEmoji) {
+  var size = (barWidth * 0.6) / 6;
+  return Positioned(
+    left: (barWidth * 0.2) + (size * numberOfEmoji) + size / 2,
+    top: barHeight * 0.6,
+    child: Container(
+      height: size,
+      width: size,
+      decoration: BoxDecoration(
+        color: Color(0xffeDBF37),
+        borderRadius: BorderRadius.circular(50),
+      ),
+      child: Stack(
+        children: [
+          CustomPaint(
+            painter: DepressedFaceCustomPaint(size),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+class DepressedFaceCustomPaint extends CustomPainter {
+  double mySize;
+  DepressedFaceCustomPaint(this.mySize);
+  @override
+  void paint(Canvas canvas, Size size) {
+    //left Eye
+    //  //eye brow
+    canvas
+      ..save()
+      ..translate(mySize * 0.1, mySize * 0.2)
+      ..rotate(-22 * pi / 180)
+      ..translate(-mySize * 0.1, -mySize * 0.2);
+    var rectLeftEyebrow =
+        Rect.fromLTRB(mySize * 0.1, mySize * 0.3, mySize * 0.4, mySize * 0.45);
+    canvas.drawArc(
+        rectLeftEyebrow, 0, pi, false, Paint()..color = Color(0xff8D7220));
+    canvas.restore();
+    // //eye
+    var rectLeftEye = Rect.fromLTRB(
+        mySize * 0.15, mySize * 0.4, mySize * 0.45, mySize * 0.55);
+    canvas.drawArc(rectLeftEye, 0, pi, false, Paint()..color = Colors.black);
+
+    //right eye
+    //  //eyebrow
+    canvas
+      ..save()
+      ..translate(mySize * 0.9, mySize * 0.2)
+      ..rotate(22 * pi / 180)
+      ..translate(-mySize * 0.9, -mySize * 0.2);
+    var rectLeftEyebroww =
+        Rect.fromLTRB(mySize * 0.6, mySize * 0.3, mySize * 0.9, mySize * 0.45);
+    canvas.drawArc(
+        rectLeftEyebroww, 0, pi, false, Paint()..color = Color(0xff8D7220));
+    canvas.restore();
+    // //eye
+    var rectRightEye =
+        Rect.fromLTWH(mySize * 0.55, mySize * 0.4, mySize * 0.3, mySize * 0.15);
+    //Rect.fromLTRB(
+    //mySize * 0.55, mySize * 0.4, mySize * 0.85, mySize * 0.55);
+    canvas.drawArc(rectRightEye, 0, pi, false, Paint()..color = Colors.black);
+
+    //mouth
+    canvas.drawRect(
+      Rect.fromCenter(
+        center: Offset(mySize / 2, mySize / 2 + mySize * 0.28),
+        height: mySize * 0.05,
+        width: mySize * 0.2,
+      ),
+      Paint()
+        ..color = Colors.black
+        ..strokeCap = StrokeCap.round,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return false;
+  }
+}
+
 class Bar extends CustomPainter {
   double myHeight;
   double myWidth;
@@ -330,18 +450,16 @@ class Bar extends CustomPainter {
   Bar(this.myHeight, this.myWidth);
   @override
   void paint(Canvas canvas, Size size) {
-    print('size is $size');
-    print('mywithd is $myWidth');
     //leftBar
-    var leftBar = Rect.fromPoints(
-        Offset(0, myHeight * 0.14), Offset(myWidth * 0.025, myHeight * 0.9));
+    var leftBar = Rect.fromPoints(Offset(myWidth * 0.1, myHeight * 0.14),
+        Offset(myWidth * 0.1 + myWidth * 0.025, myHeight * 0.9));
+    canvas.drawRect(leftBar, Paint()..color = const Color(0xffAAAAAA));
 
-    canvas.drawRect(leftBar, Paint()..color = Color(0xffAAAAAA));
-//leftArc
-    final arcRect = Rect.fromLTRB(
-        myWidth * 0.012, myHeight * 0.012, myWidth * 0.3, myHeight * 0.3);
-    final startAngle1 = -pi / 2;
-    final sweepAngle1 = -pi / 2;
+    //leftArc
+    final arcRect = Rect.fromLTRB(myWidth * 0.1 + myWidth * 0.012,
+        myHeight * 0.012, myWidth * 0.3, myHeight * 0.3);
+    const startAngle1 = -pi / 2;
+    const sweepAngle1 = -pi / 2;
     canvas.drawArc(
         arcRect,
         startAngle1,
@@ -351,16 +469,23 @@ class Bar extends CustomPainter {
           ..color = Color(0xffAAAAAA)
           ..strokeWidth = myWidth * 0.025
           ..style = PaintingStyle.stroke);
+
     //topBar
-    var topBarCaenter = Offset(myWidth / 2, myHeight * 0.0125);
+    var topBarCaenter = Offset(myWidth / 2, myHeight * 0.013);
     var topBarRect = Rect.fromCenter(
-        center: topBarCaenter, width: (myWidth * 0.7), height: myWidth * 0.025);
-    canvas.drawRect(topBarRect, Paint()..color = Color(0xffAAAAAA));
+        center: topBarCaenter,
+        width: (myWidth * 0.62),
+        height: myWidth * 0.025);
+    canvas.drawRect(topBarRect, Paint()..color = const Color(0xffAAAAAA));
+
     //right arc
-    final arcRect2 = Rect.fromLTRB((myWidth * 0.7), myHeight * 0.012,
-        (myWidth * 1) - myWidth * 0.012, myHeight * 0.3);
-    final startAngle2 = -pi / 2;
-    final sweepAngle2 = pi / 2;
+    var minusMargin = myWidth - myWidth * 0.1;
+    var minusArc =
+        minusMargin - ((myWidth * 0.3) - ((myWidth * 0.1) - (myWidth * 0.012)));
+    final arcRect2 = Rect.fromLTRB(minusArc, myHeight * 0.012,
+        minusMargin - ((myWidth * 0.012)), myHeight * 0.3);
+    const startAngle2 = -pi / 2;
+    const sweepAngle2 = pi / 2;
     canvas.drawArc(
         arcRect2,
         startAngle2,
@@ -370,11 +495,12 @@ class Bar extends CustomPainter {
           ..color = Color(0xffAAAAAA)
           ..strokeWidth = myWidth * 0.025
           ..style = PaintingStyle.stroke);
-    //rightBar
-    var rightBar = Rect.fromPoints(Offset(myWidth * 0.975, myHeight * 0.14),
-        Offset(myWidth * 1, myHeight * 0.9));
 
-    canvas.drawRect(rightBar, Paint()..color = Color(0xffAAAAAA));
+    //rightBar
+    var rightBar = Rect.fromPoints(
+        Offset(myWidth * 0.9 - (myWidth * 0.025), myHeight * 0.14),
+        Offset(myWidth * 0.9, myHeight * 0.9));
+    canvas.drawRect(rightBar, Paint()..color = const Color(0xffAAAAAA));
   }
 
   @override
