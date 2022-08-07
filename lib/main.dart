@@ -32,7 +32,13 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage>
     with SingleTickerProviderStateMixin {
   late AnimationController controller;
-  late Animation rotationTween;
+  late Tween<double> rightTween;
+  late Animation rightRotationTween;
+  late Animation leftRotationTween;
+  double startValue1 = 0.0;
+  double endValue1 = 15.0;
+  double startValue2 = 0.0;
+  double endValue2 = 15.0;
 
   double calculateLineMargin(int lineNumber, double barWidth) {
     print('total is $barWidth');
@@ -50,13 +56,36 @@ class _MyHomePageState extends State<MyHomePage>
   void initState() {
     super.initState();
     controller =
-        AnimationController(duration: const Duration(seconds: 2), vsync: this);
-    rotationTween = Tween<double>(begin: 0.0, end: 15.0)
-        .animate(CurvedAnimation(parent: controller, curve: Curves.easeInOut));
+        AnimationController(duration: const Duration(seconds: 3), vsync: this);
+    rightTween = Tween<double>(begin: startValue1, end: endValue1);
+    rightRotationTween = rightTween.animate(CurvedAnimation(
+        parent: controller,
+        curve: Interval(0.0, 0.5, curve: Curves.easeInOut)));
+
+    leftRotationTween = Tween<double>(begin: startValue2, end: endValue2)
+        .animate(CurvedAnimation(
+            parent: controller,
+            curve: Interval(0.5, 1, curve: Curves.easeInOut)));
     controller.addListener(() {
       setState(() {});
     });
-    controller.forward(from: 0.0);
+    controller.forward();
+    controller.addListener(() {
+      print('i am ${controller.value}');
+      if (controller.value > 0.5) {
+        print('val is ');
+        rightTween.begin = 15.0;
+        rightTween.end = 0.0;
+      }
+      // if (controller.value == 0.75) {
+      //   print('val is ');
+      //   setState(() {
+      //     endValue2 = 0.0;
+      //     startValue2 = 15.0;
+      //     controller.forward();
+      //   });
+      // }
+    });
     controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         controller.repeat(reverse: true);
@@ -118,7 +147,7 @@ class _MyHomePageState extends State<MyHomePage>
                   top: height * 0.012,
                   child: Transform(
                     transform:
-                        Matrix4.rotationZ((rotationTween.value) * pi / 180),
+                        Matrix4.rotationZ((leftRotationTween.value) * pi / 180),
                     child: Container(
                       width: width * 0.003,
                       height: height * 0.6,
@@ -127,7 +156,7 @@ class _MyHomePageState extends State<MyHomePage>
                   ),
                 ),
                 //face
-                smilyFace(width * 0.04, width, height, 0),
+                smilyFace(width * 0.04, width, height, 0, leftRotationTween),
 
                 //2-Not Amused Face
                 //line
@@ -186,8 +215,8 @@ class _MyHomePageState extends State<MyHomePage>
                   ),
                   top: height * 0.012,
                   child: Transform(
-                    transform:
-                        Matrix4.rotationZ(-(rotationTween.value) * pi / 180),
+                    transform: Matrix4.rotationZ(
+                        -(rightRotationTween.value) * pi / 180),
                     child: Container(
                       width: width * 0.003,
                       height: height * 0.6,
@@ -195,7 +224,7 @@ class _MyHomePageState extends State<MyHomePage>
                     ),
                   ),
                 ),
-                tearyFace(width * 0.04, width, height, 4),
+                tearyFace(width * 0.04, width, height, 4, rightRotationTween),
 
                 //2-Not Amused Face
                 //line
@@ -221,79 +250,82 @@ class _MyHomePageState extends State<MyHomePage>
   }
 }
 
-Widget smilyFace(
-    double width, double barWidth, double barHeight, double numberOfEmoji) {
+Widget smilyFace(double width, double barWidth, double barHeight,
+    double numberOfEmoji, Animation leftAnimaiton) {
   var size = (barWidth * 0.6) / 6;
   return Positioned(
     left: (barWidth * 0.2) + (size * numberOfEmoji) + size / 2,
     top: barHeight * 0.6,
-    child: Container(
-      height: size,
-      width: size,
-      decoration: BoxDecoration(
-        color: Color(0xffeDBF37),
-        borderRadius: BorderRadius.circular(50),
-      ),
-      child: Stack(
-        children: [
-          //leftEye
-          Positioned(
-            top: size * 0.3,
-            left: size * 0.2,
-            child: Transform.rotate(
-              angle: pi / 4,
-              child: Container(
-                height: size * 0.05,
-                width: size * 0.2,
-                color: Colors.black,
+    child: Transform(
+      transform: Matrix4.rotationZ(leftAnimaiton.value),
+      child: Container(
+        height: size,
+        width: size,
+        decoration: BoxDecoration(
+          color: Color(0xffeDBF37),
+          borderRadius: BorderRadius.circular(50),
+        ),
+        child: Stack(
+          children: [
+            //leftEye
+            Positioned(
+              top: size * 0.3,
+              left: size * 0.2,
+              child: Transform.rotate(
+                angle: pi / 4,
+                child: Container(
+                  height: size * 0.05,
+                  width: size * 0.2,
+                  color: Colors.black,
+                ),
               ),
             ),
-          ),
-          Positioned(
-            top: size * 0.3 + size * 0.09,
-            left: size * 0.25,
-            child: Transform.rotate(
-              angle: -pi / 12,
-              child: Container(
-                height: size * 0.05,
-                width: size * 0.15,
-                color: Colors.black,
+            Positioned(
+              top: size * 0.3 + size * 0.09,
+              left: size * 0.25,
+              child: Transform.rotate(
+                angle: -pi / 12,
+                child: Container(
+                  height: size * 0.05,
+                  width: size * 0.15,
+                  color: Colors.black,
+                ),
               ),
             ),
-          ),
-          //rightEye
-          Positioned(
-            top: size * 0.3,
-            left: size * 0.6,
-            child: Transform.rotate(
-              angle: -pi / 4,
-              child: Container(
-                height: size * 0.05,
-                width: size * 0.2,
-                color: Colors.black,
+            //rightEye
+            Positioned(
+              top: size * 0.3,
+              left: size * 0.6,
+              child: Transform.rotate(
+                angle: -pi / 4,
+                child: Container(
+                  height: size * 0.05,
+                  width: size * 0.2,
+                  color: Colors.black,
+                ),
               ),
             ),
-          ),
-          Positioned(
-            top: size * 0.3 + size * 0.09,
-            left: size * 0.6,
-            child: Transform.rotate(
-              angle: pi / 12,
-              child: Container(
-                height: size * 0.05,
-                width: size * 0.15,
-                color: Colors.black,
+            Positioned(
+              top: size * 0.3 + size * 0.09,
+              left: size * 0.6,
+              child: Transform.rotate(
+                angle: pi / 12,
+                child: Container(
+                  height: size * 0.05,
+                  width: size * 0.15,
+                  color: Colors.black,
+                ),
               ),
             ),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: size * 0.01),
-            child: CustomPaint(
-              painter: SmilyFaceSmile(),
-              size: Size(size, size),
+            Container(
+              margin: EdgeInsets.only(top: size * 0.01),
+              child: CustomPaint(
+                painter: SmilyFaceSmile(),
+                size: Size(size, size),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     ),
   );
@@ -560,25 +592,31 @@ class AngryFaceCustomPaint extends CustomPainter {
 
 //5
 //Teary Face
-Widget tearyFace(
-    double width, double barWidth, double barHeight, double numberOfEmoji) {
+Widget tearyFace(double width, double barWidth, double barHeight,
+    double numberOfEmoji, Animation rightAnimaiton) {
   var size = (barWidth * 0.6) / 6;
   return Positioned(
-    left: (barWidth * 0.2) + (size * numberOfEmoji) + size / 2,
-    top: barHeight * 0.6,
-    child: Container(
-      height: size,
-      width: size,
-      decoration: BoxDecoration(
-        color: Color(0xffeDBF37),
-        borderRadius: BorderRadius.circular(50),
-      ),
-      child: Stack(
-        children: [
-          CustomPaint(
-            painter: TearyFaceCustomPaint(size),
-          ),
-        ],
+    left: (barWidth * 0.2) +
+        (size * numberOfEmoji) +
+        size / 2 +
+        rightAnimaiton.value * 5,
+    top: barHeight * 0.6 - rightAnimaiton.value,
+    child: Transform.rotate(
+      angle: rightAnimaiton.value - 20,
+      child: Container(
+        height: size,
+        width: size,
+        decoration: BoxDecoration(
+          color: Color(0xffeDBF37),
+          borderRadius: BorderRadius.circular(50),
+        ),
+        child: Stack(
+          children: [
+            CustomPaint(
+              painter: TearyFaceCustomPaint(size),
+            ),
+          ],
+        ),
       ),
     ),
   );
@@ -622,7 +660,7 @@ class TearyFaceCustomPaint extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return false;
+    return true;
   }
 }
 
